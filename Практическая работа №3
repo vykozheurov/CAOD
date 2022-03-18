@@ -1,0 +1,75 @@
+#include <iostream>
+using namespace std;
+// function merge
+void Merge(int* a, int low, int high, int mid) {
+	int i, j, k;
+	int* temp = new int[high - low + 1];
+	i = low;
+	k = 0;
+	j = mid + 1;
+	// Merge into temp[].
+	while (i <= mid && j <= high) {
+		if (a[i] < a[j]) {
+			temp[k] = a[i];
+			k++;
+			i++;
+		}
+		else {
+			temp[k] = a[j];
+			k++;
+			j++;
+		}
+	}
+	// from i to mid into temp[].
+	while (i <= mid) {
+		temp[k] = a[i];
+		k++;
+		i++;
+	}
+	// from j to high into temp[].
+	while (j <= high) {
+		temp[k] = a[j];
+		k++;
+		j++;
+	}
+	// sorted data from temp[] to a[].
+	for (i = low; i <= high; i++) {
+		a[i] = temp[i - low];
+	}
+}
+// function to split array into two parts.
+void MergeSort(int* a, int low, int high) {
+	int mid;
+	if (low < high) {
+		mid = (low + high) / 2;
+		// Split the data into two halves.
+		MergeSort(a, low, mid);
+		MergeSort(a, mid + 1, high);
+		// Merge to get sorted result.
+		Merge(a, low, high, mid);
+	}
+}
+int main() {
+	srand(time(NULL));
+	int n, i;
+	cin >> n;
+	int* A = new int[n];
+	for (int i = 0; i < n; i++) {
+		A[i] = 1 + rand();
+		cout << A[i] << " ";
+	}
+	cout << endl;
+	clock_t start, end;
+	start = clock();
+	MergeSort(A, 0, n - 1);
+	
+	// Printing the sorted data.
+	cout << "\nSorted Data ";
+	for (i = 0; i < n; i++)
+		cout << " " << A[i];
+	cout << endl;
+	end = clock();
+	double seconds = ((double)end - start) / ((double)CLOCKS_PER_SEC);
+	cout << "Time: " << seconds << " seconds";
+	return 0;
+}
